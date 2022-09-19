@@ -21,4 +21,24 @@ package phoneList;
 
 public class Contact {
 
+    private String contactName;
+    private long contactNumber;
+
+    public Contact(String name, long number) {
+        contactName = name;
+        contactNumber = number;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public long getContactNumber() {
+        return contactNumber;
+    }
+
+    @Override
+    public String toString() {
+        return contactName + " " + contactNumber;
+    }
 }

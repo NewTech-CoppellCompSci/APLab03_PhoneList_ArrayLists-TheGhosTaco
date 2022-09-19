@@ -1,6 +1,6 @@
 package phoneList;
 
-import java.util.Scanner;
+import java.util.*;
 
 /*
  * Phone List
@@ -11,7 +11,7 @@ import java.util.Scanner;
  * You MUST
  *   - Use an ArrayList
  *   - Keep list in alphabetical order
- *   - Complete the 
+ *   - Complete the methods below
  *   
  * You May
  *   - Add methods as you see fit
@@ -25,84 +25,100 @@ import java.util.Scanner;
 
 
 public class PhoneList {
+	
+	public ArrayList<Contact> contactList;
+	public static Scanner input;
 
-	/*
-	 * Instance Variables
-	 */
-	
-	
+	private long timeSleep;
 	
 	//Constructor
 	public PhoneList() {
 		//initialize instance variables
-	}
-	
-	
-	/*
-	 * This should do the following
-	 * (whatever order you feel is best)
-	 *   - ask the user for contact's name and number
-	 *   - create a new Contact object with that input
-	 *   - add that object to the phone list
-	 *        in alphabetical order
-	 *        Hint: compareTo(String other)
-	 *   - tell the user what the new contact is and that 
-	 *        it's been added
-	 */
-	public static void addContact() {
-		
-		
+		this.contactList = new ArrayList<Contact>();
+		this.input = new Scanner(System.in);
+		this.timeSleep = 2000;
 	}
 	
 	
 	
-	/*
-	 * This should do the following
-	 * (whatever order you feel is best)
-	 *   - ask the user for the contact's name
-	 *   - search through the list for that contact
-	 *   - if the contact is not found
-	 *        tell the user and end the method
-	 *   - if the contact is found
-	 *        Remove the item from the list
-	 *        Print the contact's name and number
-	 *        Say that contact has been removed
-	 *        Remove the item from the list
-	 *        
-	 */
-	public static void removeContact() {
+	public void addContact() {
+		ClearScreen();
+
+		System.out.println("Enter the contact's name: ");
+		String name = input.nextLine();
+		System.out.println("Enter the contact's number: ");
+		long number = input.nextLong();
+
+		Contact contact = new Contact(name, number);
+
+		contactList.add(contact);
+		contactList.sort((Contact c1, Contact c2) -> c1.getContactName().compareTo(c2.getContactName()));	
 		
+		try{		
+			System.out.println(contact.getContactName() + " (" + contact.getContactNumber() + ") has been added to the list.");
+			Thread.sleep(this.timeSleep);
+		}
+		catch(Exception e){
+			System.out.println("Program Error: " + e.getMessage());
+		}
+
+		String holding = input.nextLine();
+	}
+			
+	public void removeContact() {
+		ClearScreen();
 		
+		System.out.println("---- Contact List ----\n");
+		if(contactList.isEmpty()){
+			System.out.println("There are no contacts in the list.\n");
+			try {		
+				Thread.sleep(this.timeSleep);
+			}
+			catch(Exception e){
+				System.out.println("Program Error: " + e.getMessage());
+			} 
+			return;
+		}
+
+		for(int i = 0; i < contactList.size(); i++){
+			System.out.println("[" + i + "] " + contactList.get(i).getContactName() + " (" + contactList.get(i).getContactNumber() + ")");
+		}
+
+		System.out.println("Enter index to remove: ");
+		int toRemove = input.nextInt();
+
+		contactList.remove(toRemove);
 	}
 	
-	
-	/*
-	 * This should
-	 *   - Print all items in list
-	 *   - Must be headers for all columns
-	 *   - print in alphabetical order
-	 *   - print line of something to "box" the list
-	 *       Examples:
-	 *          *****************
-	 *          -----------------
-	 *          #################
-	 */
-	public static void printList() {
+	public void printList() {
+		ClearScreen();
+
+		System.out.println("---- Contact List ----\n");
+		if(contactList.isEmpty()){
+			System.out.println("There are no contacts in the list.\n");
+			try {		
+				Thread.sleep(this.timeSleep);
+			}
+			catch(Exception e){
+				System.out.println("Program Error: " + e.getMessage());
+			} 
+			return;
+		}
+		else{
+			for (Contact contact : contactList) {
+				System.out.println(contact.getContactName() + " (" + contact.getContactNumber() + ")");
+			}
+			input.nextLine();
+		}
+
+		
 		
 	}
 
-	
-	
-	/*
-	 * GET FAMILIAR WITH THIS MENU!!!!
-	 * 
-	 * I will be asking you to create programs with menus.
-	 * You may do them however you like.  But here is an example
-	 * of how to manage them.
-	 * 
-	 */
-	public static void menu() {
-		
+	public void menu() {
+
+		ClearScreen();
+
 		int input = 0;
 		
 		String menu = "-----------------------\n"
@@ -118,7 +134,8 @@ public class PhoneList {
 			
 			//try getting an input
 			try {
-				String inputString = getString("\n" + menu);  //get input
+
+				String inputString = getString(menu);  //get input
 				input = Integer.valueOf(inputString);  //try converting to int
 			}
 			catch (Exception e) {
@@ -134,7 +151,6 @@ public class PhoneList {
 			case 2:
 				//handle menu line 2: Remove Contact
 				removeContact();
-				
 				break;
 			case 3:
 				//handle menu line 3: Print List
@@ -142,30 +158,31 @@ public class PhoneList {
 				break;
 			case 4:
 				//handle menu line 4: Quit
-				System.out.println("\nGodbye!");
+				System.out.println("\nGoodbye!");
 				break;
 			default:
-				System.out.println("\nNot a valid input.\n"
-								 + "Please try again.");
+				ClearScreen();
+				System.out.println("\nNot a valid input. Please try again.\n");
 			}
 			
-			
-		
 		}
 		
 	}
-	
-	public static String getString(String str) {
-		
-		Scanner inKey = new Scanner(System.in);
-		System.out.print(str);  //notice it's NOT a print line.  This way input is next to question.
-		return inKey.nextLine();
-		
-	}
-	
 	
 	public static void main(String[] args) {
 		PhoneList app = new PhoneList();
 		app.menu();
 	}
+
+	// Utils
+	public static String getString(String str) {
+		
+		System.out.print(str);  //notice it's NOT a print line.  This way input is next to question.
+		return input.nextLine();
+		
+	}
+	public static void ClearScreen(){
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }    
 }
